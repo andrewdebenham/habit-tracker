@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { useAuthedUser } from '../contexts/AuthedUserProvider';
+import Calendar from '../components/Calendar';
 import { logout } from '../services/authService';
 
 function HomeScreen() {
@@ -14,6 +15,7 @@ function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>Welcome to the Home Screen!</Text>
+      <Calendar />
       <Button title="Logout" onPress={handleLogout} />
     </View>
   );
@@ -22,7 +24,7 @@ function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    paddingTop: 10,
     alignItems: 'center',
     backgroundColor: '#fff',
   },
