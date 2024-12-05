@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 import { useLayoutEffect } from 'react';
 import TabBarIcon from "../components/TabBarIcon";
 import HomeScreen from "../screens/HomeScreen";
-import SecondScreen from "../screens/SecondScreen";
+import TrackingScreen from "../screens/TrackingScreen";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
@@ -42,11 +42,11 @@ export default function BottomTabNavigator({ navigation, route }) {
             />
             <BottomTab.Screen 
                 name='SecondScreen'
-                component={SecondScreen}
+                component={TrackingScreen}
                 options={{
-                    title: 'Second Screen',
+                    title: 'Tracking',
                     tabBarIcon: ({ focused }) => (
-                        <TabBarIcon focused={focused} name='book' />
+                        <TabBarIcon focused={focused} name='analytics-outline' />
                     ),
                 }}
             />
