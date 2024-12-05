@@ -2,8 +2,8 @@ module.exports = {
     client: 'mysql2',
     connection: {
         host: '127.0.0.1',
-        database: 'habit_tracker',
+        database: process.env.MYSQL_DB,
         user: 'root',
-        password: process.env.MYSQL_PASSWORD // need to import from .env
+        password: process.env.MYSQL_PASSWORD
     }
 }

@@ -12,6 +12,7 @@ const path = require('path');
 const logger = require('morgan');
 
 const usersRouter = require('./routes/users');
+const habitsRouter = require('./routes/habits');
 
 app.use(helmet());
 app.use(logger('dev'));
@@ -31,6 +32,7 @@ app.use((err, req, res, next) => {
 });
 
 app.use('/users', usersRouter);
+app.use('/habits', habitsRouter);
 
 app.listen(3000, () => {
     console.log('The express app is ready.');
