@@ -36,9 +36,17 @@ router.post("/signup", function (req, res, next) {
             return req.db.from("users").insert({ email, hash });
         })
         .then(() => {
+            // Retrieve the newly created user's ID
+            return req.db
+                .from("users")
+                .select("id")
+                .where("email", "=", email)
+                .first();
+        })
+        .then((user) => {
             const expires_in = 60 * 60 * 24; // 1 day
             const exp = Date.now() + expires_in * 1000;
-            const token = jwt.sign({ email, exp }, JWT_SECRET);
+            const token = jwt.sign({ email, id: user.id, exp }, JWT_SECRET);
             res.status(201).json({ success: true, message: "user created", token_type: "Bearer", token, expires_in });
         });
 });
@@ -70,20 +78,19 @@ router.post("/login", function (req, res, next) {
             }
 
             const user = users[0];
-            return bcrypt.compare(password, user.hash);
-        })
-        .then((match) => {
-            if (!match) {
-                return res.status(401).json({
-                    error: true,
-                    message: "Invalid email or password",
-                });
-            }
+            return bcrypt.compare(password, user.hash).then((match) => {
+                if (!match) {
+                    return res.status(401).json({
+                        error: true,
+                        message: "Invalid email or password",
+                    });
+                }
 
-            const expires_in = 60 * 60 * 24; // 1 day
-            const exp = Date.now() + expires_in * 1000;
-            const token = jwt.sign({ email, exp }, JWT_SECRET);
-            res.json({ token_type: "Bearer", token, expires_in });
+                const expires_in = 60 * 60 * 24; // 1 day
+                const exp = Date.now() + expires_in * 1000;
+                const token = jwt.sign({ email, id: user.id, exp }, JWT_SECRET); // Include user ID in the token
+                res.json({ token_type: "Bearer", token, expires_in });
+            });
         })
         .catch((error) => {
             console.error("Error during login:", error);
@@ -93,6 +100,9 @@ router.post("/login", function (req, res, next) {
             });
         });
 });
+
+// Get user id
+
 
 
 module.exports = router;

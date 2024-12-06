@@ -15,6 +15,7 @@ const AuthedUserProvider = ({ children }) => {
             setLoading(true);
             try {
                 const authedUser = await getUser();
+                console.log(authedUser);
                 setUser(authedUser);
             } catch (error) {
                 console.error('Error checking user:', error);
