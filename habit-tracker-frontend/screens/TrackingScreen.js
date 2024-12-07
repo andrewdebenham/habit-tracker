@@ -4,6 +4,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { getHabits, addHabit, deleteHabit } from '../services/habitService';
 import { getTrackingProgress, trackHabit } from '../services/trackingService';
 import { useAuthedUser } from '../contexts/AuthedUserProvider';
+import { useTrackingUpdate } from '../contexts/TrackingUpdateProvider';
 import { Ionicons } from '@expo/vector-icons';
 
 // Custom Checkbox Component
@@ -15,6 +16,7 @@ const CustomCheckbox = ({ isChecked, onToggle }) => (
 
 const TrackingScreen = () => {
     const authedUser = useAuthedUser();
+    const { toggleTrackingUpdate, trackingUpdated } = useTrackingUpdate();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [habits, setHabits] = useState([]);
     const [newHabit, setNewHabit] = useState('');
@@ -51,7 +53,7 @@ const TrackingScreen = () => {
 
             fetchHabitsAndProgress();
         }
-    }, [authedUser, selectedDate]);
+    }, [authedUser, selectedDate, trackingUpdated]);
 
     // Toggle habit completion and sync with backend
     const toggleHabit = async (id) => {
@@ -68,6 +70,7 @@ const TrackingScreen = () => {
                     habit.id === id ? { ...habit, progress: newCompletedStatus } : habit
                 )
             );
+            toggleTrackingUpdate(); // Notify ProgressGrid
         } catch (error) {
             console.error('Error toggling habit completion:', error);
         }

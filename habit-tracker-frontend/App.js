@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import BottomTabNavigator from './navigation/BottomTabNavigator';
 import { AuthedUserProvider, useAuthedUser } from './contexts/AuthedUserProvider';
+import { TrackingUpdateProvider } from './contexts/TrackingUpdateProvider';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 
@@ -39,7 +40,9 @@ function AppContent() {
 export default function App() {
   return (
     <AuthedUserProvider>
-      <AppContent />
+      <TrackingUpdateProvider>
+        <AppContent />
+      </TrackingUpdateProvider>
     </AuthedUserProvider>
   );
 }

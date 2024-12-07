@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { getTrackingProgress } from '../services/trackingService';
 import { useAuthedUser } from '../contexts/AuthedUserProvider';
+import { useTrackingUpdate } from '../contexts/TrackingUpdateProvider';
 
 const ProgressGrid = () => {
     const authedUser = useAuthedUser();
+    const { trackingUpdated } = useTrackingUpdate();
     const [progressData, setProgressData] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchLast30DaysProgress = async () => {
             if (!authedUser?.user.id) return;
 
             try {
-                setLoading(true);
                 const today = new Date();
                 const last30Days = Array.from({ length: 60 }, (_, i) => {
                     const date = new Date(today);
@@ -40,24 +40,14 @@ const ProgressGrid = () => {
                     })
                 );
 
-                setProgressData(progress.reverse()); // Reverse to display earliest date first
+                setProgressData(progress); // Reverse to display earliest date first
             } catch (error) {
                 console.error('Error fetching progress:', error);
-            } finally {
-                setLoading(false);
             }
         };
 
         fetchLast30DaysProgress();
-    }, [authedUser]);
-
-    if (loading) {
-        return (
-            <View style={styles.loadingContainer}>
-                <Text style={styles.loadingText}>Loading...</Text>
-            </View>
-        );
-    }
+    }, [authedUser, trackingUpdated]);
 
     return (
         <View style={styles.container}>
