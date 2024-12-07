@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { useAuthedUser } from '../contexts/AuthedUserProvider';
-import Calendar from '../components/Calendar';
+import ProgressGrid from '../components/ProgressGrid';
 import { logout } from '../services/authService';
 
 function HomeScreen() {
@@ -15,7 +15,7 @@ function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.welcome}>Welcome to the Home Screen!</Text>
-      <Calendar />
+      <ProgressGrid />
       <Button title="Logout" onPress={handleLogout} />
     </View>
   );

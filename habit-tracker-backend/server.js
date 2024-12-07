@@ -10,9 +10,11 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const logger = require('morgan');
+const verifyToken = require('./middleware/verify-token');
 
 const usersRouter = require('./routes/users');
 const habitsRouter = require('./routes/habits');
+const habitTrackingRouter = require('./routes/habit-tracking');
 
 app.use(helmet());
 app.use(logger('dev'));
@@ -33,6 +35,7 @@ app.use((err, req, res, next) => {
 
 app.use('/users', usersRouter);
 app.use('/habits', habitsRouter);
+app.use('/habit-tracking', habitTrackingRouter);
 
 app.listen(3000, () => {
     console.log('The express app is ready.');

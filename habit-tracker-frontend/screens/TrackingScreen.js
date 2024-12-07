@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Button, TextInput } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { getHabits, addHabit } from '../services/habitService'; // Import habitService functions
+import { getHabits, addHabit, deleteHabit } from '../services/habitService';
+import { getTrackingProgress, trackHabit } from '../services/trackingService';
 import { useAuthedUser } from '../contexts/AuthedUserProvider';
-
+import { Ionicons } from '@expo/vector-icons';
 
 // Custom Checkbox Component
 const CustomCheckbox = ({ isChecked, onToggle }) => (
@@ -18,40 +19,87 @@ const TrackingScreen = () => {
     const [habits, setHabits] = useState([]);
     const [newHabit, setNewHabit] = useState('');
 
-    // Fetch habits on component mount
+    // Fetch habits and their tracking progress when the date changes or on mount
     useEffect(() => {
         if (authedUser?.user.id) {
-            const fetchHabits = async () => {
+            const fetchHabitsAndProgress = async () => {
                 try {
+                    // Fetch habits for the user
                     const fetchedHabits = await getHabits(authedUser.user.id);
-                    setHabits(fetchedHabits.map(habit => ({ ...habit, progress: false })));
+
+                    // Filter habits based on their creation date
+                    const filteredHabits = fetchedHabits.filter((habit) => {
+                        const habitCreationDate = new Date(habit.created_at).setHours(0, 0, 0, 0);
+                        const selectedDateOnly = new Date(selectedDate).setHours(0, 0, 0, 0);
+                        return habitCreationDate <= selectedDateOnly;
+                    });
+
+                    // Fetch tracking progress for the selected date
+                    const trackingProgress = await getTrackingProgress(authedUser.user.id, selectedDate.toISOString().split('T')[0]);
+
+                    // Merge progress into the filtered habits array
+                    const updatedHabits = filteredHabits.map((habit) => {
+                        const progressEntry = trackingProgress.find((entry) => entry.habit_id === habit.id);
+                        return { ...habit, progress: progressEntry ? progressEntry.completed === 1 : false };
+                    });
+
+                    setHabits(updatedHabits); // Update the state
                 } catch (error) {
-                    console.error('Error fetching habits:', error);
+                    console.error('Error fetching habits or progress:', error);
                 }
             };
 
-            fetchHabits();
+            fetchHabitsAndProgress();
         }
-    }, [authedUser]);
+    }, [authedUser, selectedDate]);
 
-    // Toggle habit completion (local only for now)
-    const toggleHabit = (id) => {
-        setHabits((prevHabits) =>
-            prevHabits.map((habit) =>
-                habit.id === id ? { ...habit, progress: !habit.progress } : habit
-            )
-        );
+    // Toggle habit completion and sync with backend
+    const toggleHabit = async (id) => {
+        const habitToUpdate = habits.find((habit) => habit.id === id);
+        const newCompletedStatus = !habitToUpdate.progress;
+
+        try {
+            // Update the progress in the backend
+            await trackHabit(id, selectedDate.toISOString().split('T')[0], newCompletedStatus);
+
+            // Update the local state
+            setHabits((prevHabits) =>
+                prevHabits.map((habit) =>
+                    habit.id === id ? { ...habit, progress: newCompletedStatus } : habit
+                )
+            );
+        } catch (error) {
+            console.error('Error toggling habit completion:', error);
+        }
     };
 
     const handleAddHabit = async () => {
         try {
-            console.log(authedUser, newHabit);
-            await addHabit(authedUser.user.id, newHabit);
-            setNewHabit(''); // Clear input field
-            const updatedHabits = await getHabits(authedUser.user.id); // Refetch habits after adding
-            setHabits(updatedHabits.map(habit => ({ ...habit, progress: false })));
+            await addHabit(authedUser.user.id, newHabit); // Add the new habit
+            setNewHabit(''); // Clear the input field
+
+            // Refetch habits and progress for the selected date
+            const fetchedHabits = await getHabits(authedUser.user.id); // Fetch updated habits
+            const trackingProgress = await getTrackingProgress(authedUser.user.id, selectedDate.toISOString().split('T')[0]); // Fetch progress
+
+            // Merge the progress data into the habits
+            const updatedHabits = fetchedHabits.map((habit) => {
+                const progressEntry = trackingProgress.find((entry) => entry.habit_id === habit.id);
+                return { ...habit, progress: progressEntry ? progressEntry.completed === 1 : false };
+            });
+
+            setHabits(updatedHabits); // Update the state with the merged data
         } catch (error) {
             console.error('Error adding habit:', error);
+        }
+    };
+
+    const handleDeleteHabit = async (habitId) => {
+        try {
+            await deleteHabit(habitId, authedUser.user.id); // Call delete API
+            setHabits((prevHabits) => prevHabits.filter((habit) => habit.id !== habitId)); // Update the state
+        } catch (error) {
+            console.error('Error deleting habit:', error);
         }
     };
 
@@ -59,16 +107,20 @@ const TrackingScreen = () => {
     const onChangeDate = (event, selected) => {
         const currentDate = selected || selectedDate;
         setSelectedDate(currentDate);
-        // Fetch or update habits for the selected date if needed
     };
 
     const renderHabit = ({ item }) => (
         <View style={styles.habitContainer}>
-            <CustomCheckbox
-                isChecked={item.progress}
-                onToggle={() => toggleHabit(item.id)}
-            />
-            <Text style={styles.habitText}>{item.name}</Text>
+            <View style={styles.habitSeparator}>
+                <CustomCheckbox
+                    isChecked={item.progress}
+                    onToggle={() => toggleHabit(item.id)}
+                />
+                <Text style={styles.habitText}>{item.name}</Text>
+            </View>
+            <TouchableOpacity onPress={() => handleDeleteHabit(item.id)}>
+                <Ionicons name="trash-outline" size={20} />
+            </TouchableOpacity>
         </View>
     );
 
@@ -130,11 +182,17 @@ const styles = StyleSheet.create({
     habitContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
         padding: 10,
         backgroundColor: '#fff',
         borderRadius: 8,
         marginBottom: 10,
         elevation: 2,
+    },
+    habitSeparator: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     habitText: {
         fontSize: 16,

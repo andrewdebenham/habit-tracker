@@ -56,3 +56,32 @@ export const addHabit = async (userId, name) => {
         throw error;
     }
 };
+
+/**
+ * Delete a habit by its ID.
+ * @param {number} habitId - The ID of the habit to delete.
+ * @param {number} userId - The user ID of the habit owner.
+ * @returns {Promise<object>} - Response indicating success or failure.
+ */
+export const deleteHabit = async (habitId, userId) => {
+    try {
+        const response = await fetch(`${BASE_URL}/habits/${habitId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId }), // Pass userId in the request body
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to delete habit.');
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error deleting habit:', error);
+        throw error;
+    }
+};
