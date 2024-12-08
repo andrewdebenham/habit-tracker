@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const BACKEND_URL = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:3000';
 
 /**
  * Decode the JWT token to extract payload
@@ -56,7 +56,7 @@ const getUser = async () => {
  */
 const signup = async (formData) => {
     try {
-        const res = await fetch(`${BACKEND_URL}/users/signup`, {
+        const res = await fetch(`${BASE_URL}/users/signup`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData),
@@ -79,7 +79,7 @@ const signup = async (formData) => {
  */
 const login = async (user) => {
     try {
-        const res = await fetch(`${BACKEND_URL}/users/login`, {
+        const res = await fetch(`${BASE_URL}/users/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(user),

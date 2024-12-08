@@ -85,3 +85,35 @@ export const deleteHabit = async (habitId, userId) => {
         throw error;
     }
 };
+
+/**
+ * Updates the name of a habit.
+ * @param {number} habitId - The ID of the habit to update.
+ * @param {string} newName - The new name for the habit.
+ * @returns {Promise<object>} - The response from the server.
+ */
+export const updateHabit = async (habitId, newName) => {
+    if (!habitId || !newName || typeof newName !== 'string' || newName.trim() === '') {
+        throw new Error('Invalid habitId or habit name.');
+    }
+
+    try {
+        const response = await fetch(`${BASE_URL}/habits/${habitId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: newName.trim() }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to update habit name.');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error updating habit name:', error);
+        throw error;
+    }
+};

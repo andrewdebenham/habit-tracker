@@ -41,8 +41,8 @@ router.get('/:user_id', async (req, res) => {
     try {
         // Query the database to get the user's habits
         const habits = await req.db.from('habits')
-        .select('*')
-        .where('user_id', '=', user_id);
+            .select('*')
+            .where('user_id', '=', user_id);
 
         // Respond with the list of habits
         res.status(200).json({ success: true, habits });
@@ -82,7 +82,42 @@ router.delete('/:habitId', async (req, res) => {
     }
 });
 
-// update progress
+// PUT route to update a habit name
+router.put('/:habitId', async (req, res) => {
+    const { habitId } = req.params; // Extract habitId from the route parameter
+    const { name } = req.body; // Extract the new name from the request body
+
+    if (!name || typeof name !== 'string' || name.trim() === '') {
+        return res.status(400).json({
+            error: true,
+            message: 'Invalid habit name. Please provide a valid name.',
+        });
+    }
+
+    try {
+        const result = await req.db('habits')
+            .where({ id: habitId })
+            .update({ name: name.trim() });
+
+        if (result === 0) {
+            return res.status(404).json({
+                error: true,
+                message: 'Habit not found or no changes made.',
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Habit name updated successfully.',
+        });
+    } catch (error) {
+        console.error('Error updating habit name:', error);
+        res.status(500).json({
+            error: true,
+            message: 'Internal server error.',
+        });
+    }
+});
 
 
 module.exports = router;

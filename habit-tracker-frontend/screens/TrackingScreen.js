@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Button, TextInput } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { getHabits, addHabit, deleteHabit } from '../services/habitService';
+import { getHabits, addHabit, deleteHabit, updateHabit } from '../services/habitService';
 import { getTrackingProgress, trackHabit } from '../services/trackingService';
 import { useAuthedUser } from '../contexts/AuthedUserProvider';
 import { useTrackingUpdate } from '../contexts/TrackingUpdateProvider';
@@ -20,6 +20,8 @@ const TrackingScreen = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [habits, setHabits] = useState([]);
     const [newHabit, setNewHabit] = useState('');
+    const [editingHabitId, setEditingHabitId] = useState(null);
+    const [editingHabitName, setEditingHabitName] = useState('');
 
     // Fetch habits and their tracking progress when the date changes or on mount
     useEffect(() => {
@@ -92,6 +94,7 @@ const TrackingScreen = () => {
             });
 
             setHabits(updatedHabits); // Update the state with the merged data
+            toggleTrackingUpdate(); // Notify ProgressGrid
         } catch (error) {
             console.error('Error adding habit:', error);
         }
@@ -101,8 +104,30 @@ const TrackingScreen = () => {
         try {
             await deleteHabit(habitId, authedUser.user.id); // Call delete API
             setHabits((prevHabits) => prevHabits.filter((habit) => habit.id !== habitId)); // Update the state
+            toggleTrackingUpdate();
         } catch (error) {
             console.error('Error deleting habit:', error);
+        }
+    };
+
+    const handleEditHabit = (habitId, name) => {
+        setEditingHabitId(habitId);
+        setEditingHabitName(name);
+    };
+
+    const handleSaveEdit = async () => {
+        try {
+            await updateHabit(editingHabitId, editingHabitName);
+            setHabits((prevHabits) =>
+                prevHabits.map((habit) =>
+                    habit.id === editingHabitId ? { ...habit, name: editingHabitName } : habit
+                )
+            );
+            toggleTrackingUpdate();
+        } catch (error) {
+            console.error('Error updating habit name:', error);
+        } finally {
+            setEditingHabitId(null); // Exit edit mode
         }
     };
 
@@ -119,11 +144,32 @@ const TrackingScreen = () => {
                     isChecked={item.progress}
                     onToggle={() => toggleHabit(item.id)}
                 />
-                <Text style={styles.habitText}>{item.name}</Text>
+                {editingHabitId === item.id ? (
+                    <View style={styles.editContainer}>
+                        <TextInput
+                            style={styles.editInput}
+                            value={editingHabitName}
+                            onChangeText={setEditingHabitName}
+                            autoFocus
+                        />
+                        <TouchableOpacity style={styles.submitButton} onPress={handleSaveEdit}>
+                            <Ionicons name="checkmark-outline" size={20} color="green" />
+                        </TouchableOpacity>
+                    </View>
+                ) : (
+                    <Text style={styles.habitText}>{item.name}</Text>
+                )}
             </View>
-            <TouchableOpacity onPress={() => handleDeleteHabit(item.id)}>
-                <Ionicons name="trash-outline" size={20} />
-            </TouchableOpacity>
+            {editingHabitId !== item.id && (
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity onPress={() => handleEditHabit(item.id, item.name)}>
+                        <Ionicons name="create-outline" size={20} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleDeleteHabit(item.id)}>
+                        <Ionicons name="trash-outline" size={20} />
+                    </TouchableOpacity>
+                </View>
+            )}
         </View>
     );
 
@@ -192,10 +238,28 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         elevation: 2,
     },
+    editContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10, // Adds spacing between input and button
+    },
+    editInput: {
+        fontSize: 16,
+        padding: 5,
+        width: 290,
+    },
+    submitButton: {
+        marginLeft: 10,
+    },
     habitSeparator: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    buttonContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 20,
     },
     habitText: {
         fontSize: 16,
