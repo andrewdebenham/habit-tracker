@@ -83,7 +83,8 @@ function HomeScreen() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.welcome}>Welcome, {user.name || 'User'}!</Text>
+            {/* <Text style={styles.welcome}>Welcome, {user.name || 'User'}!</Text> */}
+            <Text style={styles.welcome}>Habit Tracker</Text>
 
             {/* Progress Grid */}
             <ProgressGrid />

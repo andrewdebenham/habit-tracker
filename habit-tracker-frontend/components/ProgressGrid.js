@@ -63,13 +63,27 @@ const ProgressGrid = () => {
                     />
                 ))}
             </View>
+            <View style={styles.keyContainer}>
+                <View style={styles.keyItem}>
+                    <View style={[styles.square, { backgroundColor: 'green' }]} />
+                    <Text style={styles.keyText}>All habits completed</Text>
+                </View>
+                <View style={styles.keyItem}>
+                    <View style={[styles.square, { backgroundColor: 'gray' }]} />
+                    <Text style={styles.keyText}>Not all completed</Text>
+                </View>
+            </View>
+            <Text style={styles.smallText}>Complete your habits to fill in the grid!</Text>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        padding: 10,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
     },
     title: {
         fontSize: 18,
@@ -81,13 +95,33 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
-        width: 200,
+        width: 225,
     },
     square: {
         width: 20,
         height: 20,
         margin: 2,
         borderRadius: 4,
+    },
+    keyContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 10,
+        gap: 20, // Adds space between the key items
+    },
+    keyItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 5, // Adds space between the square and text
+    },
+    keyText: {
+        fontSize: 14,
+        color: '#555',
+    },
+    smallText: {
+        marginTop: 10,
+        textAlign: 'center',
     },
     loadingContainer: {
         flex: 1,
