@@ -73,7 +73,7 @@ const ProgressGrid = () => {
                     <Text style={styles.keyText}>Not all completed</Text>
                 </View>
             </View>
-            <Text style={styles.smallText}>Complete your habits to fill in the grid!</Text>
+            {/* <Text style={styles.smallText}>Complete your habits to fill in the grid!</Text> */}
         </View>
     );
 };

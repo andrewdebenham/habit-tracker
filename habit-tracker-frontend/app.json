@@ -4,13 +4,13 @@
     "slug": "assignment-2",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/HabitTracker.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/HabitTracker.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#00bf63"
     },
     "ios": {
       "supportsTablet": true

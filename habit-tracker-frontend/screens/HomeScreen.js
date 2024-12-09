@@ -3,12 +3,11 @@ import { View, Text, StyleSheet, FlatList, Button, TouchableOpacity } from 'reac
 import ProgressGrid from '../components/ProgressGrid';
 import { useAuthedUser } from '../contexts/AuthedUserProvider';
 import { useTrackingUpdate } from '../contexts/TrackingUpdateProvider';
-import { logout } from '../services/authService';
 import { getHabits } from '../services/habitService';
 import { getTrackingProgress, trackHabit } from '../services/trackingService';
 
 function HomeScreen() {
-    const { user, setUser } = useAuthedUser(); // Access user and setUser from context
+    const { user } = useAuthedUser(); // Access user and setUser from context
     const { toggleTrackingUpdate, trackingUpdated } = useTrackingUpdate();
     const [todayHabits, setTodayHabits] = useState([]);
 
@@ -49,11 +48,6 @@ function HomeScreen() {
         fetchTodayHabits();
     }, [user, trackingUpdated]); // Re-fetch if the user changes
 
-    const handleLogout = () => {
-        logout(); // Call the logout function from authService
-        setUser(null); // Clear the user from context
-    };
-
     const toggleHabit = async (habitId) => {
         const habit = todayHabits.find((h) => h.id === habitId);
         const newCompleted = !habit.progress;
@@ -84,7 +78,7 @@ function HomeScreen() {
     return (
         <View style={styles.container}>
             {/* <Text style={styles.welcome}>Welcome, {user.name || 'User'}!</Text> */}
-            <Text style={styles.welcome}>Habit Tracker</Text>
+            {/* <Text style={styles.welcome}>Habit Tracker</Text> */}
 
             {/* Progress Grid */}
             <ProgressGrid />
@@ -97,8 +91,7 @@ function HomeScreen() {
                 keyExtractor={(item) => item.id.toString()}
                 contentContainerStyle={styles.habitList}
             />
-            {/* Logout Button */}
-            <Button title="Logout" onPress={handleLogout} />
+            
         </View>
     );
 }

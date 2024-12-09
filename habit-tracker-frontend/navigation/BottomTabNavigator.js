@@ -5,19 +5,20 @@ import { useLayoutEffect } from 'react';
 import TabBarIcon from "../components/TabBarIcon";
 import HomeScreen from "../screens/HomeScreen";
 import TrackingScreen from "../screens/TrackingScreen";
+import AboutScreen from "../screens/AboutScreen";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Home";
 
-function getHeaderTitle(route) {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? INITIAL_ROUTE_NAME;
+// function getHeaderTitle(route) {
+//     const routeName = getFocusedRouteNameFromRoute(route) ?? INITIAL_ROUTE_NAME;
 
-    if (routeName === "Home") {
-        return "How to get started";
-    } else if (routeName === "RecordEvents") {
-        return "Links to learn more";
-    }
-}
+//     if (routeName === "Home") {
+//         return "How to get started";
+//     } else if (routeName === "RecordEvents") {
+//         return "Links to learn more";
+//     }
+// }
 
 export default function BottomTabNavigator({ navigation, route }) {
     useLayoutEffect(() => {
@@ -41,12 +42,22 @@ export default function BottomTabNavigator({ navigation, route }) {
                 }}
             />
             <BottomTab.Screen 
-                name='SecondScreen'
+                name='Tracking'
                 component={TrackingScreen}
                 options={{
                     title: 'Tracking',
                     tabBarIcon: ({ focused }) => (
                         <TabBarIcon focused={focused} name='analytics-outline' />
+                    ),
+                }}
+            />
+            <BottomTab.Screen 
+                name='About'
+                component={AboutScreen}
+                options={{
+                    title: 'About',
+                    tabBarIcon: ({ focused }) => (
+                        <TabBarIcon focused={focused} name='information-circle-outline' />
                     ),
                 }}
             />
