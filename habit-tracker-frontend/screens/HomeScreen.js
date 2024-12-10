@@ -46,7 +46,7 @@ function HomeScreen() {
         };
 
         fetchTodayHabits();
-    }, [user, trackingUpdated]); // Re-fetch if the user changes
+    }, [user, trackingUpdated]);
 
     const toggleHabit = async (habitId) => {
         const habit = todayHabits.find((h) => h.id === habitId);
@@ -85,12 +85,16 @@ function HomeScreen() {
 
             {/* Today's Habits */}
             <Text style={styles.sectionTitle}>Today's Habits</Text>
-            <FlatList
-                data={todayHabits}
-                renderItem={renderHabit}
-                keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={styles.habitList}
-            />
+            {todayHabits.length === 0 ? (
+                <Text>Head over to the Tracking page to add your first habit!</Text>
+            ) : (
+                <FlatList
+                    data={todayHabits}
+                    renderItem={renderHabit}
+                    keyExtractor={(item) => item.id.toString()}
+                    contentContainerStyle={styles.habitList}
+                />
+            )}
             
         </View>
     );
@@ -101,6 +105,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         padding: 20,
+        // backgroundColor: '#00bf6333',
         backgroundColor: '#fff',
     },
     welcome: {

@@ -55,7 +55,7 @@ router.get('/:user_id', async (req, res) => {
 // Delete habit
 router.delete('/:habitId', async (req, res) => {
     const { habitId } = req.params;
-    const { userId } = req.body; // Or get it from query params if preferred: req.query.userId
+    const { userId } = req.body;
 
     if (!userId) {
         return res.status(400).json({ error: 'User ID is required.' });

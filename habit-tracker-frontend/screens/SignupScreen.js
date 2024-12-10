@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Image, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useAuthedUser } from '../contexts/AuthedUserProvider';
 import { signup } from '../services/authService';
 import { useNavigation } from '@react-navigation/native';
@@ -30,6 +30,7 @@ const SignupScreen = () => {
 
     return (
         <View style={styles.container}>
+            <Image source={require('../assets/HabitTracker.png')} style={styles.image} />
             <Text style={styles.title}>Sign Up</Text>
 
             {/* Error Message */}
@@ -81,9 +82,18 @@ const SignupScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'start',
         padding: 20,
         backgroundColor: '#fff',
+    },
+    image: {
+        width: 200,
+        height: 200,
+        borderRadius: 20,
+        resizeMode: 'cover',
+        alignSelf: 'center',
+        marginBottom: 50,
+        marginTop: 20,
     },
     title: {
         fontSize: 24,

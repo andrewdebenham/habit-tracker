@@ -1,5 +1,6 @@
 const BASE_URL = 'http://localhost:3000';
 
+
 /**
  * Fetch the list of habits for a specific user.
  * @param {number} userId - The ID of the user whose habits should be retrieved.
@@ -25,6 +26,7 @@ export const getHabits = async (userId) => {
         throw error;
     }
 };
+
 
 /**
  * Add a new habit for a user.
@@ -57,6 +59,7 @@ export const addHabit = async (userId, name) => {
     }
 };
 
+
 /**
  * Delete a habit by its ID.
  * @param {number} habitId - The ID of the habit to delete.
@@ -85,6 +88,7 @@ export const deleteHabit = async (habitId, userId) => {
         throw error;
     }
 };
+
 
 /**
  * Updates the name of a habit.

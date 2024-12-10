@@ -30,6 +30,9 @@ export default function BottomTabNavigator({ navigation, route }) {
     return (
         <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} screenOptions={{
             tabBarStyle: styles.tabBarStyle,
+            headerStyle: {
+                backgroundColor: '#fff',
+            },
         }}>
             <BottomTab.Screen 
                 name='Home'

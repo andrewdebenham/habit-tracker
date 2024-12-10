@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Image, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { useAuthedUser } from '../contexts/AuthedUserProvider'; // Adjust path if needed
 import { login } from '../services/authService'; // Adjust path if needed
 import { useNavigation } from '@react-navigation/native';
@@ -23,6 +23,7 @@ const LoginScreen = () => {
 
     return (
         <View style={styles.container}>
+            <Image source={require('../assets/HabitTracker.png')} style={styles.image} />
             <Text style={styles.title}>Login</Text>
 
             {/* Error Message */}
@@ -64,9 +65,18 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'start',
         padding: 20,
         backgroundColor: '#fff',
+    },
+    image: {
+        width: 200,
+        height: 200,
+        borderRadius: 20,
+        resizeMode: 'cover',
+        alignSelf: 'center',
+        marginBottom: 50,
+        marginTop: 20,
     },
     title: {
         fontSize: 24,

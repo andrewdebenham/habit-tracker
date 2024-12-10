@@ -51,7 +51,7 @@ const ProgressGrid = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Last 60 Days Progress</Text>
+            <Text style={styles.title}>60 Day Progress Chart</Text>
             <View style={styles.grid}>
                 {progressData.map((day, index) => (
                     <View
@@ -108,12 +108,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginVertical: 10,
-        gap: 20, // Adds space between the key items
+        gap: 20,
     },
     keyItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 5, // Adds space between the square and text
+        gap: 5,
     },
     keyText: {
         fontSize: 14,

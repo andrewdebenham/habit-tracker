@@ -176,12 +176,14 @@ const TrackingScreen = () => {
     return (
         <View style={styles.container}>
             {/* Date Picker */}
-            <DateTimePicker
-                value={selectedDate}
-                mode="date"
-                display="default"
-                onChange={onChangeDate}
-            />
+            <View style={styles.datePickerContainer}>
+                <DateTimePicker
+                    value={selectedDate}
+                    mode="date"
+                    display="default"
+                    onChange={onChangeDate}
+                />
+            </View>
 
             {/* Input and Add Habit Button */}
             <View style={styles.addHabitContainer}>
@@ -209,7 +211,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#f5f5f5',
+        // backgroundColor: '#00bf6333',
+        backgroundColor: '#fff',
+    },
+    datePickerContainer: {
+        width: 200,
     },
     addHabitContainer: {
         flexDirection: 'row',
@@ -242,7 +248,7 @@ const styles = StyleSheet.create({
     editContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 10, // Adds spacing between input and button
+        gap: 10,
     },
     editInput: {
         fontSize: 16,

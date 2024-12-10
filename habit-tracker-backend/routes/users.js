@@ -88,7 +88,7 @@ router.post("/login", function (req, res, next) {
 
                 const expires_in = 60 * 60 * 24; // 1 day
                 const exp = Date.now() + expires_in * 1000;
-                const token = jwt.sign({ email, id: user.id, exp }, JWT_SECRET); // Include user ID in the token
+                const token = jwt.sign({ email, id: user.id, exp }, JWT_SECRET);
                 res.json({ token_type: "Bearer", token, expires_in });
             });
         })
@@ -100,9 +100,6 @@ router.post("/login", function (req, res, next) {
             });
         });
 });
-
-// Get user id
-
 
 
 module.exports = router;

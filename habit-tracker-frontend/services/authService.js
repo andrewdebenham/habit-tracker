@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BASE_URL = 'http://localhost:3000';
 
+
 /**
  * Decode the JWT token to extract payload
  * @param {string} token - The JWT token
@@ -17,6 +18,7 @@ const decodeToken = (token) => {
         return null;
     }
 };
+
 
 /**
  * Get the user details from the token
@@ -35,19 +37,6 @@ const getUser = async () => {
     }
 };
 
-// /**
-//  * Get the user_id of the logged-in user
-//  * @returns {Promise<number|null>} - User ID or null
-//  */
-// const getUserId = async () => {
-//     try {
-//         const user = await getUser();
-//         return user?.id || null; // Assuming `id` is part of the decoded payload
-//     } catch (err) {
-//         console.log('Error getting user_id:', err);
-//         return null;
-//     }
-// };
 
 /**
  * Signup a new user
@@ -71,6 +60,7 @@ const signup = async (formData) => {
         throw new Error(err);
     }
 };
+
 
 /**
  * Login a user
@@ -98,6 +88,7 @@ const login = async (user) => {
         throw err;
     }
 };
+
 
 /**
  * Logout the user by removing the token
