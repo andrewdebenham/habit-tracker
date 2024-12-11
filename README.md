@@ -37,6 +37,10 @@ HabitTracker is a mobile application designed to help users track and improve th
 
 <img src="./habit-tracker-frontend/assets/HomeScreen.png" alt="Home Screen Screenshot" width="300"><img src="./habit-tracker-frontend/assets/TrackingScreen.png" alt="Tracking Screen Screenshot" width="300">
 
+## Installation
+
+This application uses a MySQL server running locally on my machine to manage user data, habits, and tracking progress. If you wish to install and run the app, please contact me at the email listed below for setup instructions and the necessary database configuration details.
+
 ## Dependencies
 
 ### **Frontend**
