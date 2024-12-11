@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 
 const TrackingUpdateContext = createContext();
 
+// creates a tracking update toggle to notify of updates
 export const TrackingUpdateProvider = ({ children }) => {
     const [trackingUpdated, setTrackingUpdated] = useState(false);
 

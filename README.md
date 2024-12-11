@@ -35,16 +35,19 @@ HabitTracker is a mobile application designed to help users track and improve th
 
 ## Demo
 
-<img src="./habit-tracker-frontend/assets/HomeScreen.png" alt="Splash Screen Screenshot" width="300">
+<img src="./habit-tracker-frontend/assets/HomeScreen.png" alt="Home Screen Screenshot" width="300"><img src="./habit-tracker-frontend/assets/TrackingScreen.png" alt="Tracking Screen Screenshot" width="300">
 
 ## Dependencies
 
-- **React**: version 18.3.1
-- **Vite**: For fast development server and build tool.
-- **Weather API**: [weatherapi.com](https://www.weatherapi.com/) for fetching weather data.
-- **GitHub API**: For fetching profile and repository information.
-- **Octokit**: Github's SDK for authenitcated API requests 
+### **Frontend**
+- **React Native**: Version 0.71+ for building the mobile application.
+- **Expo**: For simplifying the development and deployment process.
+- **Axios**: For making API requests to the backend.
 
+### **Backend**
+- **Express.js**: For building the RESTful API that powers the app.
+- **Knex.js**: For interacting with the MySQL database.
+- **MySQL**: For storing user data, habits, and tracking progress.
 ## Architecture
 
 HabitTracker is built using a modular architecture to ensure scalability, maintainability, and clear separation of concerns. Below is an overview of the application’s architecture:

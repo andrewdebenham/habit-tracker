@@ -11,26 +11,28 @@ function HomeScreen() {
     const { toggleTrackingUpdate, trackingUpdated } = useTrackingUpdate();
     const [todayHabits, setTodayHabits] = useState([]);
 
+    // fetch today's habits on mount and listen for updates
     useEffect(() => {
         const fetchTodayHabits = async () => {
             try {
                 const today = new Date().toISOString().split('T')[0]; // Format today's date as YYYY-MM-DD
 
+                // get habits
                 const fetchedHabits = await getHabits(user.id);
-                console.log('Fetched Habits:', fetchedHabits);
 
+                // get tracking progress
                 const trackingProgress = await getTrackingProgress(user.id, today);
-                console.log('Tracking Progress:', trackingProgress);
 
+                // filter the habits based on creation date
                 const filteredHabits = fetchedHabits
                     .filter((habit) => {
                         const habitCreatedAt = new Date(habit.created_at);
+
                         // Normalize both dates to exclude the time component
                         const habitCreatedDate = new Date(habitCreatedAt.getFullYear(), habitCreatedAt.getMonth(), habitCreatedAt.getDate());
                         const todayDate = new Date(new Date(today).getFullYear(), new Date(today).getMonth(), new Date(today).getDate());
 
-                        console.log(`Habit: ${habit.name}, Created Date: ${habitCreatedDate}, Today: ${todayDate}`);
-                        console.log(`Comparison: ${habitCreatedDate <= todayDate}`);
+                        // returns only habits created on or before today's date
                         return habitCreatedDate <= todayDate;
                     })
                     .map((habit) => {
@@ -38,7 +40,6 @@ function HomeScreen() {
                         return { ...habit, progress: progressEntry ? progressEntry.completed === 1 : false };
                     });
 
-                console.log('Filtered Habits:', filteredHabits);
                 setTodayHabits(filteredHabits);
             } catch (error) {
                 console.error('Error fetching today\'s habits:', error);
@@ -48,6 +49,7 @@ function HomeScreen() {
         fetchTodayHabits();
     }, [user, trackingUpdated]);
 
+    // toggle function to check and uncheck habit as complete / incomplete
     const toggleHabit = async (habitId) => {
         const habit = todayHabits.find((h) => h.id === habitId);
         const newCompleted = !habit.progress;
@@ -65,6 +67,7 @@ function HomeScreen() {
         }
     };
 
+    // render habit item
     const renderHabit = ({ item }) => (
         <View style={styles.habitContainer}>
             <TouchableOpacity
@@ -105,7 +108,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         padding: 20,
-        // backgroundColor: '#00bf6333',
         backgroundColor: '#fff',
     },
     welcome: {

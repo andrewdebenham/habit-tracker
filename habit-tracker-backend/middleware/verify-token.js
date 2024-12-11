@@ -16,7 +16,7 @@ function verifyToken(req, res, next) {
 
     // Verify JWT and check expiration date
     try {
-        const secretKey = "secret key";
+        const secretKey = process.env.SECRET_KEY;
         const decoded = jwt.verify(token, secretKey);
 
         if (decoded.exp < Date.now()) {

@@ -1,6 +1,13 @@
 const BASE_URL = 'http://localhost:3000'; // Replace with your actual backend URL
 
-// Get Tracking Progress
+/**
+ * Fetches tracking progress for a specific user and date.
+ *
+ * @param {number} userId - The ID of the user whose progress is being fetched.
+ * @param {string} date - The date for which to fetch habit tracking progress (formatted as YYYY-MM-DD).
+ * @returns {Promise<Object[]>} - A promise that resolves to an array of tracking progress objects.
+ * Each object represents a habit's tracking status for the specified date.
+ */
 export const getTrackingProgress = async (userId, date) => {
     try {
         const response = await fetch(`${BASE_URL}/habit-tracking?userId=${userId}&date=${date}`, {

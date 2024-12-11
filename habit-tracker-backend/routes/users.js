@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = "secret key";
+const JWT_SECRET = process.env.SECRET_KEY;
 
 // Sign up
 router.post("/signup", function (req, res, next) {
@@ -17,6 +17,7 @@ router.post("/signup", function (req, res, next) {
         return;
     }
 
+    // Query database for the given user
     const queryUsers = req.db
         .from("users")
         .select("*")
@@ -30,7 +31,7 @@ router.post("/signup", function (req, res, next) {
                     message: "User already exists",
                 });
             }
-            // Insert users into db
+            // Insert users into db with encrypted password
             const saltRounds = 10;
             const hash = bcrypt.hashSync(password, saltRounds);
             return req.db.from("users").insert({ email, hash });
@@ -43,6 +44,7 @@ router.post("/signup", function (req, res, next) {
                 .where("email", "=", email)
                 .first();
         })
+        // Create and respond with new JWT token
         .then((user) => {
             const expires_in = 60 * 60 * 24; // 1 day
             const exp = Date.now() + expires_in * 1000;
@@ -77,6 +79,7 @@ router.post("/login", function (req, res, next) {
                 });
             }
 
+            // compare encrypted passwords
             const user = users[0];
             return bcrypt.compare(password, user.hash).then((match) => {
                 if (!match) {
@@ -86,6 +89,7 @@ router.post("/login", function (req, res, next) {
                     });
                 }
 
+                // create and respond with JWT token
                 const expires_in = 60 * 60 * 24; // 1 day
                 const exp = Date.now() + expires_in * 1000;
                 const token = jwt.sign({ email, id: user.id, exp }, JWT_SECRET);
@@ -100,6 +104,5 @@ router.post("/login", function (req, res, next) {
             });
         });
 });
-
 
 module.exports = router;

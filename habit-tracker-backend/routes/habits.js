@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
             {
                 user_id,
                 name,
-                created_at: req.db.fn.now(), // Add created_at timestamp
+                created_at: req.db.fn.now(), // Adds created_at timestamp
             },
             'id' // Return the newly inserted ID
         );
@@ -84,8 +84,8 @@ router.delete('/:habitId', async (req, res) => {
 
 // PUT route to update a habit name
 router.put('/:habitId', async (req, res) => {
-    const { habitId } = req.params; // Extract habitId from the route parameter
-    const { name } = req.body; // Extract the new name from the request body
+    const { habitId } = req.params; // Extracts habitId from the route parameter
+    const { name } = req.body; // Extracts the new name from the request body
 
     if (!name || typeof name !== 'string' || name.trim() === '') {
         return res.status(400).json({
@@ -118,6 +118,5 @@ router.put('/:habitId', async (req, res) => {
         });
     }
 });
-
 
 module.exports = router;

@@ -47,7 +47,7 @@ const TrackingScreen = () => {
                         return { ...habit, progress: progressEntry ? progressEntry.completed === 1 : false };
                     });
 
-                    setHabits(updatedHabits); // Update the state
+                    setHabits(updatedHabits);
                 } catch (error) {
                     console.error('Error fetching habits or progress:', error);
                 }
@@ -102,7 +102,7 @@ const TrackingScreen = () => {
 
     const handleDeleteHabit = async (habitId) => {
         try {
-            await deleteHabit(habitId, authedUser.user.id); // Call delete API
+            await deleteHabit(habitId, authedUser.user.id); // Call delete from habit service
             setHabits((prevHabits) => prevHabits.filter((habit) => habit.id !== habitId)); // Update the state
             toggleTrackingUpdate();
         } catch (error) {
@@ -115,9 +115,10 @@ const TrackingScreen = () => {
         setEditingHabitName(name);
     };
 
+    // call updateHabit from habit service when user saves edit
     const handleSaveEdit = async () => {
         try {
-            await updateHabit(editingHabitId, editingHabitName);
+            await updateHabit(editingHabitId, editingHabitName); // call update habit
             setHabits((prevHabits) =>
                 prevHabits.map((habit) =>
                     habit.id === editingHabitId ? { ...habit, name: editingHabitName } : habit
@@ -137,6 +138,7 @@ const TrackingScreen = () => {
         setSelectedDate(currentDate);
     };
 
+    // render habit item with full edit and delete functionality 
     const renderHabit = ({ item }) => (
         <View style={styles.habitContainer}>
             <View style={styles.habitSeparator}>
@@ -211,7 +213,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        // backgroundColor: '#00bf6333',
         backgroundColor: '#fff',
     },
     datePickerContainer: {

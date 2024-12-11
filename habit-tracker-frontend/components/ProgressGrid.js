@@ -4,25 +4,29 @@ import { getTrackingProgress } from '../services/trackingService';
 import { useAuthedUser } from '../contexts/AuthedUserProvider';
 import { useTrackingUpdate } from '../contexts/TrackingUpdateProvider';
 
+// Generates a grid of 60 squares, each representing one day and the completion progress for that day
 const ProgressGrid = () => {
     const authedUser = useAuthedUser();
     const { trackingUpdated } = useTrackingUpdate();
     const [progressData, setProgressData] = useState([]);
 
+    // fetch the progress data for the last 60 days on mount and then listen for updates
     useEffect(() => {
-        const fetchLast30DaysProgress = async () => {
+        const fetchLast60DaysProgress = async () => {
             if (!authedUser?.user.id) return;
 
+            // create array of dates for the last 60 days
             try {
                 const today = new Date();
-                const last30Days = Array.from({ length: 60 }, (_, i) => {
+                const last60Days = Array.from({ length: 60 }, (_, i) => {
                     const date = new Date(today);
                     date.setDate(today.getDate() - i);
-                    return date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+                    return date.toISOString().split('T')[0]; // Formats as YYYY-MM-DD
                 });
 
+                // Map through each date and check the completion progress for each
                 const progress = await Promise.all(
-                    last30Days.map(async (date) => {
+                    last60Days.map(async (date) => {
                         const trackingProgress = await getTrackingProgress(
                             authedUser.user.id,
                             date
@@ -33,6 +37,7 @@ const ProgressGrid = () => {
                         ).length;
                         const totalCount = trackingProgress.length;
 
+                        // return completion status
                         return {
                             date,
                             completed: totalCount > 0 && completedCount === totalCount, // All habits completed
@@ -46,7 +51,7 @@ const ProgressGrid = () => {
             }
         };
 
-        fetchLast30DaysProgress();
+        fetchLast60DaysProgress();
     }, [authedUser, trackingUpdated]);
 
     return (

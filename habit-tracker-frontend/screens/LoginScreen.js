@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Image, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
-import { useAuthedUser } from '../contexts/AuthedUserProvider'; // Adjust path if needed
-import { login } from '../services/authService'; // Adjust path if needed
+import { useAuthedUser } from '../contexts/AuthedUserProvider';
+import { login } from '../services/authService';
 import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {

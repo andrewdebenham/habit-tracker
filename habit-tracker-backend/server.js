@@ -1,3 +1,4 @@
+// Import required dependencies
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -12,10 +13,12 @@ const path = require('path');
 const logger = require('morgan');
 const verifyToken = require('./middleware/verify-token');
 
+// import routers
 const usersRouter = require('./routes/users');
 const habitsRouter = require('./routes/habits');
 const habitTrackingRouter = require('./routes/habit-tracking');
 
+// Middlewares
 app.use(helmet());
 app.use(logger('dev'));
 app.use(express.json());
@@ -33,11 +36,12 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: true, message: 'Internal server error' });
 });
 
+// mount routers
 app.use('/users', usersRouter);
 app.use('/habits', habitsRouter);
 app.use('/habit-tracking', habitTrackingRouter);
 
+// initiate the server
 app.listen(3000, () => {
     console.log('The express app is ready.');
 });
-

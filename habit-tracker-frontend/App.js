@@ -17,6 +17,7 @@ SplashScreen.preventAutoHideAsync();
 function AppContent() {
   const { user } = useAuthedUser();
 
+  // return login screen if no user, else return main app content
   return user ? (
     <View style={styles.container}>
       <NavigationContainer>

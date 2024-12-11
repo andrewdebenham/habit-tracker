@@ -20,7 +20,7 @@ export const getHabits = async (userId) => {
         }
 
         const data = await response.json();
-        return data.habits; // Assumes the API response includes a "habits" array
+        return data.habits; // returns the habits object from API response
     } catch (error) {
         console.error('Error in getHabits:', error);
         throw error;
@@ -52,7 +52,7 @@ export const addHabit = async (userId, name) => {
         }
 
         const data = await response.json();
-        return data; // Assumes the API response includes the "habitId"
+        return data;
     } catch (error) {
         console.error('Error in addHabit:', error);
         throw error;
